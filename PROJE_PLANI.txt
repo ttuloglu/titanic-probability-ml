@@ -1,0 +1,484 @@
+================================================================================
+TİTANIC OLASLIK VE MAKİNE ÖĞRENİMİ PROJESİ - DETAYLI PLAN
+================================================================================
+
+PROJE ADI: Probability Meets Prediction - Introduction to Machine Learning
+           with the Titanic Dataset
+
+SON TARİH: 08/12/2025 - 23:59
+
+================================================================================
+GENEL BAKIŞ
+================================================================================
+
+Bu proje Titanic veri seti üzerinde olasılık teorisi ve makine öğrenimi
+uygulamalarını birleştiren bir çalışmadır. Proje 3 ana bölümden oluşmaktadır:
+1. Veri Hazırlama ve Analiz
+2. Olasılık ve Rastgele Değişkenler
+3. Makine Öğrenimi Sınıflandırma Modeli
+
+================================================================================
+VERİ SETİ AÇIKLAMASI
+================================================================================
+
+Titanic veri seti 891 yolcunun bilgilerini içerir. Her satır bir yolcuya aittir.
+
+DEĞİŞKENLER:
+1.  PassengerId  : Benzersiz yolcu kimlik numarası
+2.  Pclass       : Bilet sınıfı (1=birinci sınıf, 2=ikinci sınıf, 3=üçüncü sınıf)
+3.  Name         : Yolcunun tam adı
+4.  Sex          : Cinsiyet (male/female)
+5.  Age          : Yaş (bazı değerler kesirli olabilir)
+6.  SibSp        : Gemideki kardeş/eş sayısı
+7.  Parch        : Gemideki ebeveyn/çocuk sayısı
+8.  Ticket       : Bilet numarası
+9.  Fare         : Ödenen bilet ücreti
+10. Cabin        : Kabin numarası
+11. Embarked     : Biniş limanı (C=Cherbourg, Q=Queenstown, S=Southampton)
+12. Survived     : Hayatta kalma durumu (0=hayır, 1=evet) - HEDEF DEĞİŞKEN
+
+================================================================================
+ADIM 1: ORTAM KURULUMU
+================================================================================
+
+GEREKLİ KÜTÜPHANELER:
+- pandas          : Veri manipülasyonu ve analizi
+- numpy           : Sayısal hesaplamalar
+- matplotlib      : Temel görselleştirme
+- seaborn         : Gelişmiş görselleştirme
+- sklearn         : Makine öğrenimi (LogisticRegression, train_test_split,
+                    accuracy_score, confusion_matrix)
+
+KURULUM KOMUTU:
+pip install pandas numpy matplotlib seaborn scikit-learn jupyter
+
+KONTROL:
+- Python versiyonu: 3.7 veya üzeri önerilir
+- Jupyter Notebook kurulumu kontrol edilmeli
+
+================================================================================
+ADIM 2: PART 1 - VERİ HAZIRLIK VE ANALİZ
+================================================================================
+
+2.1. VERİ YÜKLEME
+--------------------
+- data 1.csv dosyasını pandas ile yükle
+- İlk 5 satırı görüntüle (head())
+- Veri yapısını incele (info(), shape, dtypes)
+
+2.2. EKSİK DEĞER ANALİZİ
+--------------------
+- Her sütundaki eksik değer sayısını bul (isnull().sum())
+- Eksik değer oranlarını hesapla
+- Görselleştirme ile eksik değerleri göster (missingno veya heatmap)
+- Eksik değerler için strateji belirle:
+  * Age: Median ile doldur
+  * Embarked: Mode (en sık değer) ile doldur
+  * Cabin: Çok fazla eksik olduğu için analiz dışı bırakılabilir
+
+2.3. HİSTOGRAM GÖRSELLEŞTİRME
+--------------------
+- Age (Yaş) histogramı:
+  * Dağılımı gözlemle
+  * Çarpıklığı (skewness) kontrol et
+  * Ortalama, medyan, mod değerlerini işaretle
+
+- Fare (Bilet Ücreti) histogramı:
+  * Dağılımı gözlemle
+  * Aykırı değerleri (outliers) tespit et
+  * Log dönüşümü ile normalize edilmiş versiyonunu da göster
+
+2.4. DEĞİŞKEN SINIFLANDIRMA
+--------------------
+Her değişkeni discrete (ayrık) veya continuous (sürekli) olarak sınıflandır:
+
+DISCRETE (AYRIK):
+- Pclass: 3 kategori (1, 2, 3)
+- Sex: 2 kategori (male, female)
+- SibSp: Sayılabilir değerler (0, 1, 2, ...)
+- Parch: Sayılabilir değerler (0, 1, 2, ...)
+- Embarked: 3 kategori (C, Q, S)
+- Survived: Binary (0, 1)
+
+CONTINUOUS (SÜREKLİ):
+- Age: Gerçek sayılar, kesirli değerler içerebilir
+- Fare: Gerçek sayılar, ondalık değerler
+
+KARMA/DİĞER:
+- PassengerId: Sıralı kimlik numarası
+- Name: Kategorik metin
+- Ticket: Kategorik metin/sayı karışımı
+- Cabin: Kategorik metin
+
+GEREKÇELER:
+- Discrete değişkenler sayılabilir ve sınırlı değerler alır
+- Continuous değişkenler bir aralıktaki herhangi bir değeri alabilir
+- İstatistiksel analiz yöntemleri değişken tipine göre değişir
+
+================================================================================
+ADIM 3: PART 2 - OLASILIK VE RASTGELE DEĞİŞKENLER
+================================================================================
+
+3.1. TEMEL OLASILIK
+--------------------
+HESAPLA:
+P(Survived = 1) = (Hayatta kalan yolcu sayısı) / (Toplam yolcu sayısı)
+
+YORUMLA:
+- Genel hayatta kalma oranı nedir?
+- Titanic faciasının şiddeti hakkında ne söyler?
+
+3.2. KOŞULLU OLASILIK
+--------------------
+HESAPLA:
+P(Survived = 1 | Sex = female) = P(Survived = 1 AND Sex = female) / P(Sex = female)
+
+KARŞILAŞTIR:
+- P(Survived = 1 | Sex = female) ile P(Survived = 1) arasındaki farkı incele
+- Kadınların "önce kadınlar ve çocuklar" protokolünden nasıl etkilendiğini tartış
+- Cinsiyetin hayatta kalma olasılığını nasıl değiştirdiğini açıkla
+
+3.3. DİSCRETE RASTGELE DEĞİŞKEN (Pclass)
+--------------------
+Pclass'ı discrete random variable olarak ele al.
+
+a) Probability Distribution Function (PDF) oluştur:
+   P(Pclass = 1) = ?
+   P(Pclass = 2) = ?
+   P(Pclass = 3) = ?
+
+   NOT: Toplamları 1 olmalı
+
+b) Expected Value (Beklenen Değer):
+   E[Pclass] = Σ (x * P(X = x))
+   E[Pclass] = 1*P(Pclass=1) + 2*P(Pclass=2) + 3*P(Pclass=3)
+
+c) Variance (Varyans):
+   Var(X) = E[X²] - (E[X])²
+
+d) YORUMLA:
+   - "Expected ticket class" ne anlama gelir?
+   - Hangi sınıf daha yaygın?
+   - Varyans değeri dağılımın homojenliği hakkında ne söyler?
+
+3.4. CONTINUOUS RASTGELE DEĞİŞKEN (Fare)
+--------------------
+Fare'ı continuous random variable olarak ele al.
+
+a) Probability Distribution Function (PDF) tahmini:
+   - Histogram kullanarak dağılımı görselleştir
+   - KDE (Kernel Density Estimation) ile smooth PDF oluştur
+   - Hangi dağılıma benzediğini yorumla (normal, log-normal, exponential?)
+
+b) P(20 ≤ Fare < 100) hesapla:
+   - Bu aralıktaki yolcu sayısını bul
+   - Toplam yolcu sayısına böl
+
+c) YORUMLA:
+   - Bu olasılık yolcu demografisi hakkında ne söyler?
+   - Ekonomik sınıf dağılımı hakkında ne anlıyoruz?
+   - Çoğu yolcu düşük mü yoksa yüksek ücret mi ödemiş?
+
+3.5. SEZGIYE AYKIRI BULGULAR (Counter-Intuitive)
+--------------------
+
+SORU 1:
+P(Survived = 1 | Pclass = 1) ile P(Survived = 1 | Pclass = 3) karşılaştır
+
+TARTIŞMA:
+- Birinci sınıf yolcuların cankurtarma botlarına daha kolay erişimi var mıydı?
+- Sonuçlar bu sezgiyi destekliyor mu?
+- Sosyal sınıf hayatta kalma şansını nasıl etkiledi?
+
+SORU 2:
+P(Survived = 1 | Age < 10) ile P(Survived = 1 | Age > 50) karşılaştır
+
+TARTIŞMA:
+- Çocukların öncelikli olduğu sezgisi var
+- Veriler bunu doğruluyor mu?
+- Yaşlılar için hayatta kalma oranı beklentilere uygun mu?
+
+================================================================================
+ADIM 4: PART 3 - MAKİNE ÖĞRENİMİ SINIFLANDIRMA MODELİ
+================================================================================
+
+4.1. İSTATİSTİKSEL VERİ ANALİZİ
+--------------------
+
+a) Descriptive Statistics (Tanımlayıcı İstatistikler):
+   Her feature için:
+   - Mean (Ortalama)
+   - Variance (Varyans)
+   - Standard Deviation (Standart Sapma)
+   - Minimum
+   - Maximum
+   - Quartiles (Q1, Q2/Median, Q3)
+
+   Kullan: data.describe()
+
+b) Covariance ve Correlation Analizi:
+
+   KORELASYON MATRİSİ:
+   - Age, Fare, Survived arasındaki korelasyonları hesapla
+   - Heatmap ile görselleştir
+
+   POINT-BISERIAL CORRELATION (Binary değişkenler için):
+   - Survived (binary) ile continuous features arasındaki korelasyon
+   - Pozitif korelasyon: Yüksek değer → Hayatta kalma artışı
+   - Negatif korelasyon: Yüksek değer → Hayatta kalma azalışı
+   - Sıfır korelasyon: İlişki yok
+
+   ÖNEMLİ YORUMLAR:
+   - Hangi feature'lar survival ile en çok ilişkili?
+   - Fare ve Pclass arasındaki ilişki nedir? (Negatif korelasyon beklenir)
+   - Age ve Survival arasındaki ilişki var mı?
+
+4.2. MODEL EĞİTİMİ
+--------------------
+
+ADIMLAR:
+
+1) Feature Selection (Özellik Seçimi):
+   Kullanılacak features: Pclass, Sex, Age, Fare
+   Sebep: Bu değişkenler hem doluluk oranı yüksek hem de survival ile ilişkili
+
+2) Categorical Encoding (Kategorik Kodlama):
+   Sex: male=0, female=1
+   Veya One-Hot Encoding kullanılabilir
+
+3) Eksik Değer İşleme:
+   Age: Median ile doldur
+   Fare: Median ile doldur (gerekirse)
+
+4) Train-Test Split:
+   from sklearn.model_selection import train_test_split
+
+   X = data[['Pclass', 'Sex', 'Age', 'Fare']]
+   y = data['Survived']
+
+   X_train, X_test, y_train, y_test = train_test_split(
+       X, y, test_size=0.3, random_state=42
+   )
+
+   NOT: test_size=0.3 → %70 eğitim, %30 test
+   random_state=42 → Tekrarlanabilirlik için sabit seed
+
+5) Logistic Regression Modeli:
+   from sklearn.linear_model import LogisticRegression
+
+   model = LogisticRegression(max_iter=1000)
+   model.fit(X_train, y_train)
+
+   NOT: max_iter artırılabilir convergence için
+
+4.3. MODEL DEĞERLENDİRME
+--------------------
+
+1) Tahminler:
+   y_pred = model.predict(X_test)
+   y_prob = model.predict_proba(X_test)[:, 1]
+
+2) Accuracy Score:
+   from sklearn.metrics import accuracy_score
+
+   accuracy = accuracy_score(y_test, y_pred)
+   print(f"Accuracy: {accuracy:.2%}")
+
+   YORUMLA:
+   - %70+ accuracy genellikle iyi kabul edilir
+   - Baseline ile karşılaştır (her zaman 0 tahmin etsek accuracy ne olurdu?)
+
+3) Confusion Matrix:
+   from sklearn.metrics import confusion_matrix
+
+   cm = confusion_matrix(y_test, y_pred)
+
+   YAPISI:
+                  Predicted
+                  0      1
+   Actual   0    TN     FP
+            1    FN     TP
+
+   - True Negative (TN): Doğru tahmin edilen ölümler
+   - False Positive (FP): Yanlış hayatta tahmin edilenler
+   - False Negative (FN): Yanlış öldü tahmin edilenler
+   - True Positive (TP): Doğru hayatta tahmin edilenler
+
+4.4. SONUÇLARIN YORUMLANMASI
+--------------------
+
+a) Predicted Probability (y_prob) ne anlama gelir?
+   - Model her yolcu için [0, 1] arasında olasılık verir
+   - 0.8 → %80 hayatta kalma ihtimali
+   - 0.2 → %20 hayatta kalma ihtimali
+   - Threshold (eşik) genellikle 0.5'tir
+
+b) Model başarısını olasılıksal terimlerle tartış:
+   - P(Tahmin doğru) = Accuracy
+   - P(Gerçekten hayatta | Tahmin hayatta) = Precision
+   - P(Tahmin hayatta | Gerçekten hayatta) = Recall/Sensitivity
+
+c) Katsayılar (Coefficients) ve etkileri:
+   - model.coef_ → Her feature'ın ağırlığı
+   - Pozitif katsayı: O feature artarsa hayatta kalma ihtimali artar
+   - Negatif katsayı: O feature artarsa hayatta kalma ihtimali azalır
+   - Örnek: Sex=female pozitif katsayıya sahip olmalı
+
+d) Accuracy'nin anlamı (conditional probability terimleriyle):
+   - Accuracy düşükse model belirsizlik altında karar veriyor demektir
+   - Neden %100 değil? → Veriler gürültülü, bazı bilgiler eksik
+   - Hangi tür hatalar daha maliyetli? FP mi FN mi?
+
+e) Tahmin belirsizliği:
+   - Neden kesin sonuç veremiyoruz?
+   - Titanic felaketinde tesadüfi faktörler rol oynadı mı?
+   - Hangi bilgiler eksik? (Kabin konumu, bot erişimi, vs.)
+
+================================================================================
+ADIM 5: RAPOR HAZIRLAMA
+================================================================================
+
+5.1. RAPOR YAPISI
+--------------------
+
+1. GİRİŞ (Introduction)
+   - Problem tanımı
+   - Titanic felaketi hakkında kısa bilgi
+   - Veri seti özeti
+   - Projenin amaçları
+
+2. OLASILIK ANALİZİ (Probability Analysis)
+   - Temel olasılıklar
+   - Koşullu olasılıklar
+   - PDF'ler ve beklenen değerler
+   - Grafik ve tablolar
+   - Yorumlar ve bulgular
+
+3. MAKİNE ÖĞRENİMİ SONUÇLARI (ML Results)
+   - Model mimarisi (Logistic Regression)
+   - Feature seçimi gerekçesi
+   - Training süreci
+   - Accuracy ve Confusion Matrix
+   - Performance metrikleri
+
+4. TARTIŞMA (Discussion)
+   - Olasılık analizi bulguları
+   - Counter-intuitive sonuçlar
+   - ML tahminleri ile olasılık ilişkisi
+   - Model kısıtlamaları
+   - Sosyal ve etik boyutlar (sınıf, cinsiyet ayrımcılığı)
+
+5. SONUÇ (Conclusion)
+   - Olasılık teorisinin ML'deki rolü
+   - Öğrenilenler
+   - Gelecek çalışmalar için öneriler
+
+5.2. GÖRSELLEŞTİRME REHBERİ
+--------------------
+- Tüm grafiklerde eksen etiketleri olmalı
+- Başlıklar açıklayıcı olmalı
+- Renkler anlamlı seçilmeli (kırmızı=tehlike, yeşil=hayatta)
+- Figure size uygun ayarlanmalı (10,6) genellikle iyidir
+- Gridlines kullan (daha kolay okunur)
+- Legend (açıklama) ekle
+
+5.3. PDF OLUŞTURMA
+--------------------
+
+YÖNTEM 1: Jupyter Notebook'tan direkt:
+   File → Download as → PDF via LaTeX
+   VEYA
+   File → Print → Save as PDF
+
+YÖNTEM 2: nbconvert kullanarak:
+   jupyter nbconvert --to pdf notebook.ipynb
+
+YÖNTEM 3: Manuel (HTML'den):
+   File → Download as → HTML
+   HTML'i tarayıcıda aç → Print to PDF
+
+KONTROL LİSTESİ:
+✓ Tüm kod bloklarının çıktıları görünüyor mu?
+✓ Grafikler net ve okunabilir mi?
+✓ Sayfa numaraları var mı?
+✓ Matematik formüller doğru render edilmiş mi?
+✓ Tablo formatları bozulmamış mı?
+
+================================================================================
+TESLİM EDİLECEKLER (Deliverables)
+================================================================================
+
+1. CODE NOTEBOOK (.ipynb):
+   - İyi dokümante edilmiş
+   - Tüm soruların cevapları var
+   - Kod düzenli ve okunabilir
+   - Markdown hücreleri açıklayıcı
+   - Çıktılar görünür
+
+2. PDF RAPOR:
+   - Profesyonel görünüm
+   - Figürler, tablolar ve açıklamalar
+   - Temiz formatlanmış
+   - Okunabilir fontlar
+
+İKİSİ DE GEREKLİ!
+
+================================================================================
+EK NOTLAR VE İPUÇLARI
+================================================================================
+
+GENEL İPUÇLARI:
+- Her adımda sonuçları kaydet
+- Kod hücrelerini küçük parçalara böl (debug için)
+- Her analiz için kısa yorum yaz
+- Grafikleri hemen yorumla
+- Matematiksel formülleri LaTeX ile yaz: $P(A|B) = \frac{P(A \cap B)}{P(B)}$
+
+HATA AYIKLAMA:
+- Convergence warning: max_iter artır
+- Missing value error: Eksik değerleri doldurmuş ol
+- Dimension mismatch: Feature boyutlarını kontrol et
+- Low accuracy: Feature engineering dene
+
+BONUS ÇALIŞMALAR (Opsiyonel):
+- Feature engineering (FamilySize = SibSp + Parch + 1)
+- Title extraction (Name'den Mr., Mrs., Miss., vs.)
+- Farklı modeller dene (Decision Tree, Random Forest)
+- Cross-validation uygula
+- ROC-AUC curve çiz
+- Feature importance analizi
+
+================================================================================
+ZAMAN YÖNETİMİ ÖNERİSİ
+================================================================================
+
+Toplam tahmini süre: 8-12 saat
+
+Part 1 (Veri Analizi):         2-3 saat
+Part 2 (Olasılık):             2-3 saat
+Part 3 (ML Modeli):            3-4 saat
+Rapor Hazırlama:               1-2 saat
+
+SON KONTROL LİSTESİ:
+□ Tüm kütüphaneler yüklü
+□ Veri seti yüklendi
+□ Part 1 tamamlandı
+□ Part 2 tamamlandı
+□ Part 3 tamamlandı
+□ Notebook temiz ve düzenli
+□ PDF başarıyla oluşturuldu
+□ Her iki dosya da hazır
+□ Son tarihten önce teslim
+
+================================================================================
+İLETİŞİM VE DESTEK
+================================================================================
+
+Takıldığın yerler için:
+- Python dokumentasyonu: https://docs.python.org
+- Pandas: https://pandas.pydata.org/docs/
+- Scikit-learn: https://scikit-learn.org/stable/documentation.html
+- Matplotlib: https://matplotlib.org/stable/contents.html
+
+İYİ ÇALIŞMALAR!
+================================================================================
