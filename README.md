@@ -5,9 +5,10 @@ This project combines probability concepts and introductory machine learning usi
 ## Included Files
 - `titanic_analysis_english_executed.ipynb` : Executed notebook in English
 - `titanic_report_english.pdf` : English project report
-- `titanic_analizi_turkce_executed.ipynb` : Executed notebook in Turkish
-- `titanic_rapor_turkce.pdf` : Turkish project report
-- `PROJE_PLANI.txt` : Original project plan (Turkish)
+- `titanic_analysis_turkish_executed.ipynb` : Executed notebook in Turkish
+- `titanic_report_turkish.pdf` : Turkish project report
+- `PROJECT_PLAN_EN.md` : English project plan summary
+- `PROJECT_PLAN_TR.txt` : Original project plan in Turkish
 
 ## Topics Covered
 - Data loading and preprocessing
@@ -23,7 +24,12 @@ This project combines probability concepts and introductory machine learning usi
 - Jupyter Notebook / JupyterLab
 - pandas, numpy, matplotlib, seaborn, scikit-learn
 
-## Open the Notebook
+## Installation
+```bash
+python3 -m pip install pandas numpy matplotlib seaborn scikit-learn jupyter
+```
+
+## Run
 ```bash
 jupyter notebook titanic_analysis_english_executed.ipynb
 ```
